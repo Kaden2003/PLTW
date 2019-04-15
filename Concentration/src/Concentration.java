@@ -10,61 +10,38 @@
  * Play continues, matching two cards at a time, until all cards have been matched.
  */
 
-/**
- * Solution Version with enhancements and Sevens rules
- */
+
 public class Concentration extends Board
 {
-    public static final int CONCENTRATION = 100;
-    public static final int SEVENS = 200;
+    public static final Integer CONCENTRATION = 100;
+    public static final Integer SEVENS = 200;
+    private Integer gamerules;
 
     // create the game board
     private Tile[][] gameboard = makeBoard();
-    // set the game rules
-    private int gamerules;
-    // uncomment to play SEVENS:
-    // private int gamerules = Board.SEVENS;
 
     /**
      * The constructor for the game. Creates the 2-dim gameboard
      * by populating it with tiles.
      */
     public Concentration() {
-
-        // get pairs of cards
         String[] cards = getCards();
-        int numCards = cards.length-1;
+        int numCards = (cards.length - 1);
 
-        gamerules = CONCENTRATION;
 
-        // randomly assing cards to game tiles
+
         for (int i = 0; i < gameboard.length; i++) {
-            for (int j = 0; j < gameboard[0].length; j++)    {
-                // choose random card
-                int r = (int)( Math.random() * numCards);
-
-                // assing card to tile
-                gameboard[i][j] = new Tile(cards[r]);
-
-                // update random number helper array, replacing used card with last card of deck
+            for (int j = 0; j < gameboard[0].length; i++) {
+                int r = (int)(Math.random() * numCards);
+                gameboard[i][j]=new Tile(cards[(r)]);
                 cards[r] = cards[numCards];
-                // manually track the cards remaining in array
-                numCards--;
             }
+            numCards--;
         }
     }
-
-    /**
-     * Determine if the board is full of cards that have all been matched,
-     * indicating the game is over
-     *
-     * Precondition: gameboard is populated with tiles
-     *
-     * @return true if all pairs of cards have been matched, false otherwse
-     */
     public boolean allTilesMatch() {
         for (int i = 0; i < gameboard.length; i++) {
-            for (int j = 0; j < gameboard[0].length; j++) {
+            for (int j = 0; j < gameboard[0].length; i++) {
                 if (!gameboard[i][j].matched()) return false;
             }
         }
@@ -87,23 +64,29 @@ public class Concentration extends Board
      */
     public String checkForMatch(int row1, int column1, int row2, int column2) {
         boolean tilesMatch = false;
-        String msg = "";
-        Tile tile1 = gameboard[row1][column1];
-        Tile tile2 = gameboard[row2][column2];
-
-        if (gamerules == CONCENTRATION) tilesMatch = tile1.equals(tile2);
-        if (gamerules == SEVENS) tilesMatch = tile1.addsTo7(tile2);
-        if (tilesMatch) {
+        String msg = " ";
+        Tile tile1 = gameboard[1][1];
+        Tile tile2 = gameboard[2][2];
+        if (gamerules == CONCENTRATION){
+            tilesMatch = tile1.equals(tile2);
+        }
+        else if (gamerules == SEVENS) {
+            tilesMatch = tile1.addsTo7(tile2);
+        }
+        else if (tilesMatch == true){
             tile1.foundMatch();
             tile2.foundMatch();
-            msg = "Matched!";
         }
         else {
-            tile1.faceUp(false);
-            tile2.faceUp(false);
+            System.out.println("They are not the same");
         }
-        return msg;
+
+
+        return "";
     }
+
+
+
 
     /**
      * Set  tile to show its card in the face up state
@@ -116,9 +99,10 @@ public class Concentration extends Board
      * @param column the column value of Tile
      */
     public void showFaceUp (int row, int column) {
-        Tile tile = gameboard[row][column];
+        Tile tile = gameboard[row] [column];
         tile.faceUp(true);
         tile.faceUp(true);
+
     }
 
     /**
@@ -129,36 +113,36 @@ public class Concentration extends Board
      *
      * @return a string represetation of the board
      */
-    public String toString()
-    {
-        String boardValues = "";
+    public String toString() {
+        String boardValues = " ";
         for (int i = 0; i < gameboard.length; i++) {
-            for (int j = 0; j < gameboard[0].length; j++) {
+            boardValues += "\n";
+            for (int j = 0; j < gameboard[0].length; i++) {
                 Tile t = gameboard[i][j];
-                if (t.isFaceUp())  boardValues = t.getFace() + boardValues;
-                else boardValues += t.getBack();
+                if (t.isFaceUp()){
+                    boardValues += t.getFace();
+                }
+                else {
+                    boardValues += t.getBack();
+                }
                 boardValues += "\t";
             }
-            boardValues += "\n";
+            return boardValues;
         }
         return boardValues;
-    }
 
-    /**
-     * Check the provided values fall within the range of the gameboard's dimension
-     * and that the tile has not been previously matched
-     *
-     * @param i the row value of Tile
-     * @param j the column value of Tile
-     * @return true if i and j fall on the board, false otherwise
-     */
-    public boolean validSelection(int i, int j) {
+
+    }
+    public boolean validSelection(int i, int j){
         if (i < gameboard.length) {
             if (j < gameboard[0].length) {
                 if (!gameboard[i][j].matched()) return true;
             }
         }
-        return false;
+        return true;
     }
+
 }
+
+
 
